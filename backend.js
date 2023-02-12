@@ -10,11 +10,19 @@ class character {
         this.cha = cha;
         this.xp_earned = xp_earned;
         this.xp_spent = xp_spent;
+        this.abilities=
+    }
+    
+    function add_ability(id) {
+        
+
     }
 }
 
 import sqlite3 from 'sqlite3'
 import { open } from 'sqlite'
+
+
 
 const db = await open({
       filename: 'HUBRIS.db',
@@ -26,3 +34,4 @@ async function load_character(player) {
     const result = await db.get(sql,"El")
     return result
 }
+
