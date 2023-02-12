@@ -15,13 +15,14 @@ class character {
 
 import sqlite3 from 'sqlite3'
 import { open } from 'sqlite'
+
 const db = await open({
       filename: 'HUBRIS.db',
       driver: sqlite3.Database
     })
 
-let sql="select * from characters where player='El';"
-
-const result = await db.get(sql)
-const char=new character(result.name,result.str,result.dex,result.con,result.int,result.wis,result.cha,result.xp_earned,result.xp_spent)
-console.log(char)
+async function load_character(player) {
+    let sql="select * from characters where player=?"
+    const result = await db.get(sql,"El")
+    return result
+}
