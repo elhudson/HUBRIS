@@ -1,6 +1,4 @@
-const sqlite3 = require('sqlite3').verbose();
-let db=new sqlite3.Database("HUBRIS.db")
-let player="El"
+
 class character {
     constructor(name, str, dex, con, int, wis, cha, xp_earned, xp_spent) {
         this.name = name;
@@ -15,24 +13,15 @@ class character {
     }
 }
 
-let warehouse=['placeholder'];
+import sqlite3 from 'sqlite3'
+import { open } from 'sqlite'
+const db = await open({
+      filename: 'HUBRIS.db',
+      driver: sqlite3.Database
+    })
 
 let sql="select * from characters where player='El';"
-db.all(sql,
-    function(err,rows) {
-        result=rows[0]
-        charname=result.name;
-        str=result.str;
-        dex=result.dex;
-        con=result.con;
-        int=result.int;
-        wis=result.wis;
-        cha=result.cha;
-        xp_earned=result.xp_earned;
-        xp_spent=result.xp_spent;
-        c=new character(charname,str,dex,con,int,wis,cha,xp_earned,xp_spent);
-        return c;
-}
-);
 
-console.log(c)
+const result = await db.get(sql)
+const char=new character(result.name,result.str,result.dex,result.con,result.int,result.wis,result.cha,result.xp_earned,result.xp_spent)
+console.log(char)
