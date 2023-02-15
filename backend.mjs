@@ -1,3 +1,6 @@
+const sqlite3=require('sqlite3')
+
+import 'sqlite.open'
 
 class character {
     constructor(name, str, dex, con, int, wis, cha, xp_earned, xp_spent) {
@@ -10,18 +13,21 @@ class character {
         this.cha = cha;
         this.xp_earned = xp_earned;
         this.xp_spent = xp_spent;
-        this.abilities=
+        this.abilities= {}
+    }
+
+    add_ability(id) {
+        const ability_type=null;
     }
     
-    function add_ability(id) {
+    
         
 
     }
+
+async function id_query() {
+
 }
-
-import sqlite3 from 'sqlite3'
-import { open } from 'sqlite'
-
 
 
 const db = await open({
@@ -35,3 +41,10 @@ async function load_character(player) {
     return result
 }
 
+/* async function read_names() {
+    let sql="SELECT name FROM sqlite_schema WHERE type='table'"
+    const result=await db.get(sql)
+    return result
+}
+
+console.log(read_names) */
