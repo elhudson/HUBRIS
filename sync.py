@@ -2,10 +2,22 @@ from nopy import NotionClient
 import pandas as pd
 import sqlite3 as sql
 from key_generator.key_generator import generate
-
+import schedule
+import time
 ## read notion databases into python 
 
+def sync():
+    content=read_databases()
+    pivots=generate_pivot_tables(content)
+    content_tables=convert(content)
+    pivot_tables=convert(pivots)
+    to_db(content_tables)
+    to_db(pivot_tables)
+    
 client=NotionClient("secret_TrlevNz6r9aY0bTxYzu2ytLwSbkIkibkbTDUfpTCiHI")
+schedule.every().day.do(sync)
+client.close()
+
 
 def read_effects():
     effect_db=client.retrieve_db("3b66c0a5ff9a42aca5f47a262c62b27a")
