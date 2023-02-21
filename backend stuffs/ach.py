@@ -4,8 +4,6 @@ import pandas as pd
 path="C:\\Users\\elhud\\Projects\\HUBRIS\\HUBRIS.db"
 con=sqlite3.connect(path)
 
-
-
 class character:
     def __init__(self,player):
         sql=f'SELECT * FROM characters WHERE player="{player}"'
@@ -47,7 +45,10 @@ relations=get_tables()[0]
 properties=get_tables()[1]
 
 
-def fetch_by_id(id, is_property=True):
+def fetch_by_id(id, target=None, is_property=True):
+    if target!=None:
+        sql=f'SELECT * FROM [{target}] WHERE id="{id}"'
+        d=pd.read_sql_query(sql,con)
     if is_property==True:
         for table in properties:
             sql=f'SELECT * FROM {table} WHERE id="{id}"'
@@ -69,6 +70,7 @@ class ability:
         self.name=self.rec["title"][0]
         self.xp=self.rec["xp"][0]
         self.desc=self.rec["description"][0]
+        ## self.tier=self.rec["tier"][0]
         self.id=id
 
 class feature(ability):
@@ -80,3 +82,29 @@ class power(ability):
         super().__init__(id)
         self.pwr=self.rec["pwr"][0]
         self.tree=self.rec["tree"][0]
+
+class effect(power):
+    def __init__(self,id):
+        super().__init__(id)
+
+class duration(power):
+    def __init__(self,id):
+        super().__init__(id)
+        self.ticks=self.rec["ticks"][0]
+
+class rng(power):
+    def __init__(self,id):
+        super().__init__(id)
+
+class background(ability):
+    def __init__(self,id):
+        super().__init__(id)
+        self.ability=fetch_by_id(self.id)["title"][0]
+
+class tag_feature(ability):
+    def __init__(self,id):
+        super().__init__(id)
+
+class class_feature(ability):
+    def __init__(self,id):
+        super().__init__(id)
