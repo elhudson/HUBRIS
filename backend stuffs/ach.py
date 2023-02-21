@@ -1,7 +1,8 @@
 import sqlite3
 import pandas as pd
 
-con=sqlite3.connect("HUBRIS.db")
+path="C:\\Users\\elhud\\Projects\\HUBRIS\\HUBRIS.db"
+con=sqlite3.connect(path)
 
 
 
@@ -45,7 +46,6 @@ relations=get_tables()[0]
 properties=get_tables()[1]
 
 
-
 def fetch_property(id):
     cur=con.cursor()
     for table in properties:
@@ -56,4 +56,3 @@ def fetch_property(id):
     rec=pd.DataFrame.from_records(d)
     return rec
        
-def fetch_relations(id)

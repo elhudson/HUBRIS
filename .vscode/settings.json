@@ -1,0 +1,9 @@
+{
+    "files.exclude": {
+        ",vscode": true,
+        ".editorconfig": true,
+        ".git**": true,
+        ".hintrc": true,
+        ".vscode": true
+    }
+}
