@@ -15,8 +15,12 @@ class character:
         self.wis=df["wis"][0]
         self.cha=df["cha"][0]
         self.ability_ids=df["abilities"][0]
-
-
+    
+    def define_abilities(self):
+        ids_list=self.ability_ids.split(",")
+        abs=generate_abilities(ids_list)
+        self.abilities=abs
+    
 def is_relational(function_name):
     l=function_name.split()
     if len(l)==1:
@@ -50,20 +54,51 @@ def fetch_by_id(id, target=None, is_property=True):
         sql=f'SELECT * FROM [{target}] WHERE id="{id}"'
         d=pd.read_sql_query(sql,con)
     if is_property==True:
-        for table in properties:
-            sql=f'SELECT * FROM {table} WHERE id="{id}"'
+        for target in properties:
+            sql=f'SELECT * FROM {target} WHERE id="{id}"'
             d=pd.read_sql_query(sql,con)
             if d.empty==False:
                 break
     elif is_property==False:
-        for table in relations:
-            sql=f'SELECT * FROM {table} WHERE primary_key="{id}"'
+        for target in relations:
+            sql=f'SELECT * FROM {target} WHERE primary_key="{id}"'
             d=pd.read_sql_query(sql,con)
             if d.empty==False:
                 break
     rec=pd.DataFrame.from_records(d)
     return rec
+
+def find_source(id):
+    for table in properties:
+        sql=f'''SELECT * FROM {table} WHERE id="{id}"'''
+        ret=pd.read_sql_query(sql,con)
+        if ret.empty==False:
+            return table
        
+def generate_abilities(ability_ids):
+    abilities=[]
+    for id in ability_ids:
+        src=find_source(id)
+        if src=="effects":
+            a=effect(id)
+            abilities.append(a)
+        if src=="durations":
+            a=duration(id)
+            abilities.append(a)
+        if src=="ranges":
+            a=rng(id)
+            abilities.append(a)
+        if src=="class_features":
+            a=class_feature(id)
+            abilities.append(a)
+        if src=="tag_features":
+            a=tag_feature(id)
+            abilities.append(a)
+        if src=="backgrounds":
+            a=background(id)
+            abilities.append(a)
+    return abilities
+
 class ability:
     def __init__(self,id):
         self.rec=fetch_by_id(id)
@@ -72,7 +107,7 @@ class ability:
         self.desc=self.rec["description"][0]
         ## self.tier=self.rec["tier"][0]
         self.id=id
-
+    
 class feature(ability):
     def __init__(self,id):
         super().__init__(id)
