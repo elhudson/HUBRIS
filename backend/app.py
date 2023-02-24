@@ -1,13 +1,15 @@
+from flask import Flask, render_template
+
 import sqlite3
 import pandas as pd
 
 path="C:\\Users\\elhud\\Projects\\HUBRIS\\HUBRIS.db"
-con=sqlite3.connect(path)
 
-class character:
-    def __init__(self,player):
+class Character:
+    def __init__(self,player,con):
         sql=f'SELECT * FROM characters WHERE player="{player}"'
         df=pd.read_sql(sql,con)
+        con.close()
         self.str=df["str"][0]
         self.dex=df["dex"][0]
         self.con=df["con"][0]
@@ -28,7 +30,7 @@ def is_relational(function_name):
     else:
         return True
 
-def get_tables():
+def get_tables(con):
     s=f'SELECT * FROM sqlite_schema WHERE type="table"'
     tables=[]
     cur=con.cursor()
@@ -43,13 +45,14 @@ def get_tables():
                 pivot_tables.append(f'[{table}]')
             else:
                 property_tables.append(table)
+    con.close()
     return pivot_tables, property_tables
 
-relations=get_tables()[0]
-properties=get_tables()[1]
 
 
-def fetch_by_id(id, target=None, is_property=True):
+def fetch_by_id(id, con, target=None, is_property=True,):
+    properties=get_tables(con)[1]
+    relations=get_tables(con)[0]
     if target!=None:
         sql=f'SELECT * FROM [{target}] WHERE id="{id}"'
         d=pd.read_sql_query(sql,con)
@@ -66,13 +69,16 @@ def fetch_by_id(id, target=None, is_property=True):
             if d.empty==False:
                 break
     rec=pd.DataFrame.from_records(d)
+    con.close()
     return rec
 
-def find_source(id):
+def find_source(id,con):
+    properties=get_tables(con)[1]
     for table in properties:
         sql=f'''SELECT * FROM {table} WHERE id="{id}"'''
         ret=pd.read_sql_query(sql,con)
         if ret.empty==False:
+            con.close()
             return table
        
 def generate_abilities(ability_ids):
@@ -100,8 +106,8 @@ def generate_abilities(ability_ids):
     return abilities
 
 class ability:
-    def __init__(self,id):
-        self.rec=fetch_by_id(id)
+    def __init__(self,id,con):
+        self.rec=fetch_by_id(id,con)
         self.name=self.rec["title"][0]
         self.xp=self.rec["xp"][0]
         self.desc=self.rec["description"][0]
@@ -109,37 +115,48 @@ class ability:
         self.id=id
     
 class feature(ability):
-    def __init__(self,id):
-        super().__init__(id)
+    def __init__(self,id,con):
+        super().__init__(id,con)
         
 class power(ability):
-    def __init__(self,id):
-        super().__init__(id)
+    def __init__(self,id,con):
+        super().__init__(id,con)
         self.pwr=self.rec["pwr"][0]
         self.tree=self.rec["tree"][0]
 
 class effect(power):
-    def __init__(self,id):
+    def __init__(self,id,con):
         super().__init__(id)
 
 class duration(power):
-    def __init__(self,id):
-        super().__init__(id)
+    def __init__(self,id,con):
+        super().__init__(id,con)
         self.ticks=self.rec["ticks"][0]
 
 class rng(power):
-    def __init__(self,id):
-        super().__init__(id)
+    def __init__(self,id,con):
+        super().__init__(id,con)
 
 class background(ability):
-    def __init__(self,id):
-        super().__init__(id)
+    def __init__(self,id,con):
+        super().__init__(id,con)
         self.ability=fetch_by_id(self.id)["title"][0]
 
 class tag_feature(ability):
-    def __init__(self,id):
-        super().__init__(id)
+    def __init__(self,id,con):
+        super().__init__(id,con)
 
 class class_feature(ability):
-    def __init__(self,id):
-        super().__init__(id)
+    def __init__(self,id,con):
+        super().__init__(id,con)
+
+
+
+app = Flask(__name__)
+
+@app.route("/")
+def hello_world():
+    con=sqlite3.connect(path)
+    character=Character("El",con)
+    return render_template("sheet.html",character=character)
+

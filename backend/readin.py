@@ -1,0 +1,148 @@
+import sqlite3
+import pandas as pd
+
+path="C:\\Users\\elhud\\Projects\\HUBRIS\\HUBRIS.db"
+
+class character:
+    def __init__(self,player,con):
+        sql=f'SELECT * FROM characters WHERE player="{player}"'
+        df=pd.read_sql(sql,con)
+        con.close()
+        self.str=df["str"][0]
+        self.dex=df["dex"][0]
+        self.con=df["con"][0]
+        self.int=df["int"][0]
+        self.wis=df["wis"][0]
+        self.cha=df["cha"][0]
+        self.ability_ids=df["abilities"][0]
+    
+    def define_abilities(self):
+        ids_list=self.ability_ids.split(",")
+        abs=generate_abilities(ids_list)
+        self.abilities=abs
+    
+def is_relational(function_name):
+    l=function_name.split()
+    if len(l)==1:
+        return False
+    else:
+        return True
+
+def get_tables(con):
+    s=f'SELECT * FROM sqlite_schema WHERE type="table"'
+    tables=[]
+    cur=con.cursor()
+    for row in cur.execute(s):
+        tables.append(row[1])
+    cur.close()
+    pivot_tables=[]
+    property_tables=[]
+    for table in tables:
+        if table!="characters":
+            if is_relational(table):
+                pivot_tables.append(f'[{table}]')
+            else:
+                property_tables.append(table)
+    con.close()
+    return pivot_tables, property_tables
+
+relations=get_tables()[0]
+properties=get_tables()[1]
+
+
+def fetch_by_id(id, con, target=None, is_property=True,):
+    if target!=None:
+        sql=f'SELECT * FROM [{target}] WHERE id="{id}"'
+        d=pd.read_sql_query(sql,con)
+    if is_property==True:
+        for target in properties:
+            sql=f'SELECT * FROM {target} WHERE id="{id}"'
+            d=pd.read_sql_query(sql,con)
+            if d.empty==False:
+                break
+    elif is_property==False:
+        for target in relations:
+            sql=f'SELECT * FROM {target} WHERE primary_key="{id}"'
+            d=pd.read_sql_query(sql,con)
+            if d.empty==False:
+                break
+    rec=pd.DataFrame.from_records(d)
+    con.close()
+    return rec
+
+def find_source(id,con):
+    for table in properties:
+        sql=f'''SELECT * FROM {table} WHERE id="{id}"'''
+        ret=pd.read_sql_query(sql,con)
+        if ret.empty==False:
+            con.close()
+            return table
+       
+def generate_abilities(ability_ids):
+    abilities=[]
+    for id in ability_ids:
+        src=find_source(id)
+        if src=="effects":
+            a=effect(id)
+            abilities.append(a)
+        if src=="durations":
+            a=duration(id)
+            abilities.append(a)
+        if src=="ranges":
+            a=rng(id)
+            abilities.append(a)
+        if src=="class_features":
+            a=class_feature(id)
+            abilities.append(a)
+        if src=="tag_features":
+            a=tag_feature(id)
+            abilities.append(a)
+        if src=="backgrounds":
+            a=background(id)
+            abilities.append(a)
+    return abilities
+
+class ability:
+    def __init__(self,id,con):
+        self.rec=fetch_by_id(id,con)
+        self.name=self.rec["title"][0]
+        self.xp=self.rec["xp"][0]
+        self.desc=self.rec["description"][0]
+        ## self.tier=self.rec["tier"][0]
+        self.id=id
+    
+class feature(ability):
+    def __init__(self,id,con):
+        super().__init__(id,con)
+        
+class power(ability):
+    def __init__(self,id,con):
+        super().__init__(id,con)
+        self.pwr=self.rec["pwr"][0]
+        self.tree=self.rec["tree"][0]
+
+class effect(power):
+    def __init__(self,id,con):
+        super().__init__(id)
+
+class duration(power):
+    def __init__(self,id,con):
+        super().__init__(id,con)
+        self.ticks=self.rec["ticks"][0]
+
+class rng(power):
+    def __init__(self,id,con):
+        super().__init__(id,con)
+
+class background(ability):
+    def __init__(self,id,con):
+        super().__init__(id,con)
+        self.ability=fetch_by_id(self.id)["title"][0]
+
+class tag_feature(ability):
+    def __init__(self,id,con):
+        super().__init__(id,con)
+
+class class_feature(ability):
+    def __init__(self,id,con):
+        super().__init__(id,con)
