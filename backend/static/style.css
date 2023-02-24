@@ -72,6 +72,11 @@ p, label, input[type="text"], input[type="number"], option, #alignment, #injurie
   width:100%;
 }
 
+.score {
+  font-size: xx-large;
+  text-align: right;
+  padding-right: 10%;
+}
 .skills {
   width:max;
   min-width: max-content;

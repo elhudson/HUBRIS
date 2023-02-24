@@ -3,7 +3,7 @@
 
 <head>
   <meta charset="utf-8">
-  <link rel="stylesheet" href="static/style.css">
+  <link rel="stylesheet" href="/static/style.css">
   <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
 </head>
 
@@ -135,9 +135,7 @@
               <table>
                 <tr>
                   <th class="score">
-                    <div class "box content ability">
-                      <input type="number" id="str" class="ability_score" value="{{ character.str }}">
-                    </div>
+                      {{character.str}}
                   </th>
                   <th class="skillList">
                     <input type="number" class="skill_bonus mod" name="athletics" id="athletics_bonus" data-stat="str">
@@ -155,9 +153,7 @@
               <table>
                 <tr>
                   <th class="score">
-                    <div class "box content ability">
-                      <input type="number" id="dex" class="ability_score">
-                    </div>
+                     {{character.dex}}
                   </th>
                   <th class=skillList>
                     <input type="number" class="skill_bonus mod" name="acrobatics" id="acrobatics_bonus"
@@ -184,10 +180,8 @@
 
               <table>
                 <tr>
-                  <th class=score>
-                    <div class "box content ability">
-                      <input type="number" id="con" class="ability_score">
-                    </div>
+                  <th class="score">
+                    {{character.con}}
                   </th>
                   <th class=skillList>
                     <input type="number" class="skill_bonus mod" name="endurance" id="endurance_bonus" data-stat="con">
@@ -204,11 +198,9 @@
 
               <table>
                 <tr>
-                  <th class=score>
-                    <div class "box content ability">
-                      <input type="number" id="int" class="ability_score">
-                    </div>
-                  </th>
+                  <th class="score">
+                    {{character.int}}
+                </th>
                   <th class=skillList>
                     <input type="number" class="skill_bonus mod" name="investigation" id="investigation_bonus"
                       data-stat="int">
@@ -236,11 +228,9 @@
 
               <table>
                 <tr>
-                  <th class=score>
-                    <div class "box content ability">
-                      <input type="number" id="wis" class="ability_score">
-                    </div>
-                  </th>
+                  <th class="score">
+                    {{character.wis}}
+                </th>
                   <th class="skillList">
                     <input type="number" class="skill_bonus mod" name="animalhandling" id="animalhandling_bonus"
                       data-stat="wis">
@@ -275,11 +265,9 @@
 
               <table>
                 <tr>
-                  <th class=score>
-                    <div class "box content ability">
-                      <input type="number" id="cha" class="ability_score">
-                    </div>
-                  </th>
+                  <th class="score">
+                    {{character.cha}}
+                </th>
                   <th class=skillList>
                     <input type="number" class="skill_bonus mod" name="composure" id="composure_bonus" data-stat="cha">
                     <input type="checkbox" class="is_proficient" name="composure" id="composure_proficiency"
@@ -411,9 +399,9 @@
                         </div>
                       </td>
                       <td>
-                        <div class="class_feature" name="class_feature_3">
-                          <input type="text" id="class_feature_3_name">
-                          <textarea id="class_feature_3_description"></textarea>
+                        <div class="class_feature" name="class_feature_4">
+                          <input type="text" id="class_feature_4_name">
+                          <textarea id="class_feature_4_description"></textarea>
                       </td>
                 </div>
                 </tr>
@@ -601,7 +589,6 @@
       </div>
     </div>
   </div>
-  <script src="static/script.js"></script>
+  <script src="/static/script.js"></script>
 </body>
-
 </html>
