@@ -14,16 +14,35 @@
         <div class="character_info">
           <h1 class="header">Character Info</h1>
           <div class="box content info">
-            <div class="r1">
+            <div class="info_item">
               <label>Name</label>
-              <input type="text" id="name">
-              <label>Class</label>
-              <input type="text" id="class">
+              <div class="fill">{{character.name}}</div>
             </div>
-            <div class="r2">
+            <div class="info_item"
+              <label>Class</label>
+              <div class="fill">{{character.class}}</div>
+            </div>
+            <div class="info_item">
               <label>Backgrounds</label>
-              <input type="text" id="background_1">
-              <input type="text" id="background_2">
+              <select name="bg_1" value="{{character.bg1}}">
+                <option value="Merchant">Merchant</option>
+                <option value="Soldier">Soldier</option>
+                <option value="SpiritBlooded">Spirit-Blooded</option>
+                <option value="Hermit">Hermit</option>
+                <option value="Urchin">Urchin</option>
+                <option value="Courtier">Courtier</option>
+                <option value="Entertainer">Entertainer</option>
+                <option value="Scholar">Laborer</option>
+                <option value="Slave">Slave</option>
+                <option value="Acolyte">Acolyte</option>
+                <option value="Reaver">Reaver</option>
+                <option value="Criminal">Criminal</option>
+                <option value="Spy">Spy</option>
+                <option value="Noble">Noble</option>
+                <option value="Scout">Scout</option>
+                <option value="Artisan">Artisan</option>
+                <option value="Sailor">Sailor</option>
+              </select>
             </div>
             <div class="r3">
               <label>Alignment</label>

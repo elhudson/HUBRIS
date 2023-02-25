@@ -3,6 +3,10 @@ p, label, input[type="text"], input[type="number"], option, #alignment, #injurie
   font-size: 12px;
 }
 
+.fill {
+  font-size:small;
+}
+
 .header {
   font-family: Bahnschrift;
   font-size: 14px;
@@ -62,6 +66,10 @@ p, label, input[type="text"], input[type="number"], option, #alignment, #injurie
   width:100%;
   height:auto;
 
+}
+
+.info div {
+  display:inline;
 }
 .hp_wrapper {
   height:60%;

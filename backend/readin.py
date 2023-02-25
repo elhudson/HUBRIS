@@ -1,8 +1,7 @@
 import sqlite3
 import pandas as pd
 
-path="C:\\Users\\elhud\\Projects\\HUBRIS\\HUBRIS.db"
-
+path="/workspaces/HUBRIS/HUBRIS.db"
 class character:
     def __init__(self,player,con):
         sql=f'SELECT * FROM characters WHERE player="{player}"'
