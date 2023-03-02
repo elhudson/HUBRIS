@@ -8,5 +8,6 @@
         ".hintrc": true,
         ".vscode": true
     },
-    "livePreview.serverRoot": "/backend/"
+    "livePreview.serverRoot": "/backend/",
+    "editor.scrollPredominantAxis": false
 }

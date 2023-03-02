@@ -16,7 +16,8 @@ class Character:
         self.int=df["int"][0]
         self.wis=df["wis"][0]
         self.cha=df["cha"][0]
-        self.ability_ids=df["abilities"][0]        
+        self.ability_ids=df["abilities"][0] 
+        self.backgrounds=[]       
     
     def define_abilities(self,con):
         ids_list=self.ability_ids.split(",")
