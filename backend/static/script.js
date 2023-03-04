@@ -6,7 +6,18 @@ const proficiencies=document.getElementsByClassName("is_proficient");
 const stats=readStats();
 
 
+function setAlignment(align) {
 
+        const menu=document.getElementById("alignment");
+        const options=menu.options;
+              console.log(options)
+                for(var i=0; i<options.length; i++){ 
+                  if (options[i].value===align) {
+                    print(options[i])
+                    options[i].setAttribute("selected",true)
+                  }
+                }
+              }
 
 function openTab(evt, tabName) {
   // Declare all variables

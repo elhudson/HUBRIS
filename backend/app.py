@@ -16,8 +16,17 @@ class Character:
         self.int=df["int"][0]
         self.wis=df["wis"][0]
         self.cha=df["cha"][0]
+        self.xp_earned=df["xp_earned"][0]
+        self.xp_spent=df["xp_spent"][0]
+        self.alignment=df["alignment"][0]
         self.ability_ids=df["abilities"][0] 
-        self.backgrounds=[]       
+        self.backgrounds=[]
+        self.effects=[]
+        self.durations=[]
+        self.ranges=[]
+        self.skills=[]
+        self.tag_features=[]
+        self.class_features=[]      
     
     def define_abilities(self,con):
         ids_list=self.ability_ids.split(",")
@@ -28,6 +37,22 @@ class Character:
         for ability in self.abilities:
             if type(ability)==background:
                 self.backgrounds.append(ability)
+            if type(ability)==pcclass:
+                self.char_class=ability
+            if type(ability)==effect:
+                self.effects.append(ability)
+            if type(ability)==rng:
+                self.ranges.append(ability)
+            if type(ability)==duration:
+                self.durations.append(ability)
+            if type(ability)==proficiency:
+                self.skills.append(ability)
+            if type(ability)==tag_feature:
+                self.tag_features.append(ability)
+            if type(ability)==class_feature:
+                self.class_features.append(ability)
+            if type(ability)==pcclass:
+                self.char_class=ability
     
 def is_relational(function_name):
     l=function_name.split()
@@ -105,6 +130,9 @@ def generate_abilities(ability_ids, con):
         if src=="backgrounds":
             a=background(id,con)
             abilities.append(a)
+        if src=="classes":
+            a=pcclass(id,con)
+            abilities.append(a)
     return abilities
 
 class ability:
@@ -113,6 +141,13 @@ class ability:
         self.name=self.rec["title"][0]
         ## self.tier=self.rec["tier"][0]
         self.id=id
+class proficiency(ability):
+    def __init__(self,id,con):
+        super().__init__(id,con)
+
+class pcclass(ability):
+    def __init__(self,id,con):
+        super().__init__(id,con)
     
 class feature(ability):
     def __init__(self,id,con):
@@ -157,4 +192,6 @@ app = Flask(__name__)
 def hello_world():
     con=sqlite3.connect(path)
     character=Character("El",con)
+    character.define_abilities(con)
+    character.bin_abilities()
     return render_template("sheet.html",character=character)

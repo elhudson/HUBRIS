@@ -7,7 +7,7 @@
   <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
 </head>
 
-<body>
+<body onload='setAlignment("{{character.alignment}}")'>
   <div class="fluid-container">
     <div class="row row-flex px-1">
       <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12 px-1">
@@ -20,34 +20,16 @@
             </div>
             <div class="info_item">
               <label>Class</label>
-              <div class="fill">{{character.class}}</div>
+              <div class="fill">{{character.char_class.name}}</div>
             </div>
             <div class="info_item">
               <label>Backgrounds</label>
-              <select name="bg_1" value="{{character.bg1}}">
-                <option value="Merchant">Merchant</option>
-                <option value="Soldier">Soldier</option>
-                <option value="SpiritBlooded">Spirit-Blooded</option>
-                <option value="Hermit">Hermit</option>
-                <option value="Urchin">Urchin</option>
-                <option value="Courtier">Courtier</option>
-                <option value="Entertainer">Entertainer</option>
-                <option value="Scholar">Laborer</option>
-                <option value="Slave">Slave</option>
-                <option value="Acolyte">Acolyte</option>
-                <option value="Reaver">Reaver</option>
-                <option value="Criminal">Criminal</option>
-                <option value="Spy">Spy</option>
-                <option value="Noble">Noble</option>
-                <option value="Scout">Scout</option>
-                <option value="Artisan">Artisan</option>
-                <option value="Sailor">Sailor</option>
-              </select>
-            </div>
-            <div class="r3">
+              <div class="fill">{{character.backgrounds[0].name}}</div>
+              <div class="fill">{{character.backgrounds[1].name}}</div>
+    
+            <div class="info_item">
               <label>Alignment</label>
               <select name="Alignment" id="alignment">
-                <option value="">Select alignment</option>
                 <option value="lg">Lawful Good</option>
                 <option value="ng">Neutral Good</option>
                 <option value="cg">Chaotic Good</option>
@@ -60,7 +42,7 @@
               </select>
             </div>
 
-            <div class="r4">
+            <div class="info_item">
               <label>Tier</label>
               <input type="radio" id="tier_1" name="tier" value="1" checked onClick="setProficiency()">
               <label for="tier1">1</label>
@@ -71,9 +53,9 @@
               <input type="radio" id="tier_4" name="tier" value="4" onClick="setProficiency()">
               <label for="tier4">4</label>
               <label>XP earned</label>
-              <input type="number" id="XP_earned" class="mod">
+              <input type="number" id="XP_earned" value="{{character.xp_earned}}" class="mod">
               <label>XP spent</label>
-              <input type="number" id="XP_spent" class="mod">
+              <input type="number" id="XP_spent" value="{{character.xp_spent}}"class="mod">
               <div title="proficiency">
                 <label>Proficiency Bonus: +</label><label id="proficiency_bonus">2</label>
               </div>

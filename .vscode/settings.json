@@ -9,5 +9,6 @@
         ".vscode": true
     },
     "livePreview.serverRoot": "/backend/",
-    "editor.scrollPredominantAxis": false
+    "editor.scrollPredominantAxis": false,
+    "python.linting.enabled": false
 }
