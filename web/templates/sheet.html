@@ -7,7 +7,7 @@
   <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
 </head>
 
-<body onload='setAlignment("{{character.alignment}}")'>
+<body onload='start("{{character.alignment}}","{{character.tier}}","{{character.hit_die}}","{{character.skill_names}}")'>
   <div class="fluid-container">
     <div class="row row-flex px-1">
       <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12 px-1">
@@ -26,10 +26,10 @@
               <label>Backgrounds</label>
               <div class="fill">{{character.backgrounds[0].name}}</div>
               <div class="fill">{{character.backgrounds[1].name}}</div>
-    
+            </div>
             <div class="info_item">
               <label>Alignment</label>
-              <select name="Alignment" id="alignment">
+              <select name="Alignment" id="alignment" class="fill">
                 <option value="lg">Lawful Good</option>
                 <option value="ng">Neutral Good</option>
                 <option value="cg">Chaotic Good</option>
@@ -44,21 +44,26 @@
 
             <div class="info_item">
               <label>Tier</label>
-              <input type="radio" id="tier_1" name="tier" value="1" checked onClick="setProficiency()">
+              <input type="radio" id="tier_1" name="tier" value="1">
               <label for="tier1">1</label>
-              <input type="radio" id="tier_2" name="tier" value="2" onClick="setProficiency()">
+              <input type="radio" id="tier_2" name="tier" value="2">
               <label for="tier2">2</label>
-              <input type="radio" id="tier_3" name="tier" value="3" onClick="setProficiency()">
+              <input type="radio" id="tier_3" name="tier" value="3">
               <label for="tier3">3</label>
-              <input type="radio" id="tier_4" name="tier" value="4" onClick="setProficiency()">
+              <input type="radio" id="tier_4" name="tier" value="4">
               <label for="tier4">4</label>
+            </div>
+            <div class="info_item">
               <label>XP earned</label>
               <input type="number" id="XP_earned" value="{{character.xp_earned}}" class="mod">
               <label>XP spent</label>
-              <input type="number" id="XP_spent" value="{{character.xp_spent}}"class="mod">
+              <input type="number" id="xp_spent" value="{{character.xp_spent}}" class="mod">
+            </div>
+            <div class="info_item">
               <div title="proficiency">
                 <label>Proficiency Bonus: +</label><label id="proficiency_bonus">2</label>
               </div>
+            </div>
             </div>
           </div>
         </div>
@@ -70,7 +75,7 @@
             <div class="hp_tracking">
               <input type=number id="hp_left" class="hp">
               <label for="hp_left">Current</label><br>
-              <input type=number id="hp_max" class="hp">
+              <input type=number id="hp_max" class="hp" value="{{character.hp_max}}">
               <label for="hp_max">Max</label>
             </div>
           </div>
@@ -135,12 +140,12 @@
             <div class="box content skills" title="str_skills">
               <table>
                 <tr>
-                  <th class="score">
+                  <th class="score" id="str">
                       {{character.str}}
                   </th>
                   <th class="skillList">
                     <input type="number" class="skill_bonus mod" name="athletics" id="athletics_bonus" data-stat="str">
-                    <input type="checkbox" class="is_proficient" name="athletics" id="athletics_proficiency"
+                    <input type="checkbox" class="is_proficient" name="athletics" id="Athletics"
                       data-stat="str" onClick="setSkill('athletics_proficiency','athletics_bonus')">
                     <label>Athletics</label> <br><br>
                   </th>
@@ -153,22 +158,22 @@
 
               <table>
                 <tr>
-                  <th class="score">
+                  <th class="score" id="dex">
                      {{character.dex}}
                   </th>
                   <th class=skillList>
                     <input type="number" class="skill_bonus mod" name="acrobatics" id="acrobatics_bonus"
                       data-stat="dex">
-                    <input type="checkbox" class="is_proficient" name="acrobatics" id="acrobatics_proficiency"
+                    <input type="checkbox" class="is_proficient" name="acrobatics" id="Acrobatics"
                       data-stat="dex">
                     <label>Acrobatics</label> <br>
                     <input type="number" class="skill_bonus mod" name="sleightofhand" id="sleightofhand_bonus"
                       data-stat="dex">
-                    <input type="checkbox" class="is_proficient" name="sleightofhand" id="sleightofhand_proficiency"
+                    <input type="checkbox" class="is_proficient" name="sleightofhand" id="Sleight of Hand"
                       data-stat="dex">
                     <label>Sleight of Hand</label> <br>
                     <input type="number" class="skill_bonus mod" name="stealth" id="stealth_bonus" data-stat="dex">
-                    <input type="checkbox" class="is_proficient" name="stealth" id="stealth_proficiency"
+                    <input type="checkbox" class="is_proficient" name="stealth" id="Stealth"
                       data-stat="dex">
                     <label>Stealth</label> <br>
                   </th>
@@ -181,12 +186,12 @@
 
               <table>
                 <tr>
-                  <th class="score">
+                  <th class="score" id="con">
                     {{character.con}}
                   </th>
                   <th class=skillList>
                     <input type="number" class="skill_bonus mod" name="endurance" id="endurance_bonus" data-stat="con">
-                    <input type="checkbox" class="is_proficient" name="endurance" id="endurance_proficiency"
+                    <input type="checkbox" class="is_proficient" name="endurance" id="Endurance"
                       data-stat="con">
                     <label>Endurance</label> <br>
                   </th>
@@ -199,25 +204,25 @@
 
               <table>
                 <tr>
-                  <th class="score">
+                  <th class="score" id="int">
                     {{character.int}}
                 </th>
                   <th class=skillList>
                     <input type="number" class="skill_bonus mod" name="investigation" id="investigation_bonus"
                       data-stat="int">
-                    <input type="checkbox" class="is_proficient" name="investigation" id="investigation_proficiency"
+                    <input type="checkbox" class="is_proficient" name="investigation" id="Investigation"
                       data-stat="int">
                     <label>Investigation</label> <br>
                     <input type="number" class="skill_bonus mod" name="magecraft" id="magecraft_bonus" data-stat="int">
-                    <input type="checkbox" class="is_proficient" name="magecraft" id="magecraft_proficiency"
+                    <input type="checkbox" class="is_proficient" name="magecraft" id="Magecraft"
                       data-stat="int">
                     <label>Magecraft</label> <br>
                     <input type="number" class="skill_bonus mod" name="medicine" id="medicine_bonus" data-stat="int">
-                    <input type="checkbox" class="is_proficient" name="medicine" id="medicine_proficiency"
+                    <input type="checkbox" class="is_proficient" name="medicine" id="Medicine"
                       data-stat="int">
                     <label>Medicine</label> <br>
                     <input type="number" class="skill_bonus mod" name="tinker" id="tinker_bonus" data-stat="int">
-                    <input type="checkbox" class="is_proficient" name="tinker" id="tinker_proficiency" data-stat="int">
+                    <input type="checkbox" class="is_proficient" name="tinker" id="Tinker" data-stat="int">
                     <label>Tinker</label> <br>
                   </th>
                 </tr>
@@ -229,31 +234,31 @@
 
               <table>
                 <tr>
-                  <th class="score">
+                  <th class="score" id="wis">
                     {{character.wis}}
                 </th>
                   <th class="skillList">
                     <input type="number" class="skill_bonus mod" name="animalhandling" id="animalhandling_bonus"
                       data-stat="wis">
-                    <input type="checkbox" class="is_proficient" name="animalhandling" id="animalhandling_proficiency"
+                    <input type="checkbox" class="is_proficient" name="animalhandling" id="Animal Handling"
                       data-stat="wis">
                     <label>Animal Handling</label> <br>
                     <input type="number" class="skill_bonus mod" name="insight" id="insight_bonus" data-stat="wis">
-                    <input type="checkbox" class="is_proficient" name="insight" id="insight_proficiency"
+                    <input type="checkbox" class="is_proficient" name="insight" id="Insight"
                       data-stat="wis">
                     <label>Insight</label> <br>
                     <input type="number" class="skill_bonus mod" name="perception" id="perception_bonus"
                       data-stat="wis">
-                    <input type="checkbox" class="is_proficient" name="perception" id="perception_proficiency"
+                    <input type="checkbox" class="is_proficient" name="perception" id="Perception"
                       data-stat="wis">
                     <label>Perception</label> <br>
                     <input type="number" class="skill_bonus mod" name="streetwise" id="streetwise_bonus"
                       data-stat="wis">
-                    <input type="checkbox" class="is_proficient" name="streetwise" id="streetwise_proficiency"
+                    <input type="checkbox" class="is_proficient" name="streetwise" id="Streetwise"
                       data-stat="wis">
                     <label>Streetwise</label> <br>
                     <input type="number" class="skill_bonus mod" name="survival" id="survival_bonus" data-stat="wis">
-                    <input type="checkbox" class="is_proficient" name="survival" id="survival_proficiency"
+                    <input type="checkbox" class="is_proficient" name="survival" id="Survival"
                       data-stat="wis">
                     <label>Survival</label> <br>
                   </th>
@@ -266,26 +271,26 @@
 
               <table>
                 <tr>
-                  <th class="score">
+                  <th class="score" id="cha">
                     {{character.cha}}
                 </th>
                   <th class=skillList>
                     <input type="number" class="skill_bonus mod" name="composure" id="composure_bonus" data-stat="cha">
-                    <input type="checkbox" class="is_proficient" name="composure" id="composure_proficiency"
+                    <input type="checkbox" class="is_proficient" name="composure" id="Composure"
                       data-stat="cha">
                     <label>Composure</label> <br>
                     <input type="number" class="skill_bonus mod" name="deception" id="deception_bonus" data-stat="cha">
-                    <input type="checkbox" class="is_proficient" name="deception" id="deception_proficiency"
+                    <input type="checkbox" class="is_proficient" name="deception" id="Deception"
                       data-stat="cha">
                     <label>Insight</label> <br>
                     <input type="number" class="skill_bonus mod" name="intimidation" id="intimidation_bonus"
                       data-stat="cha">
-                    <input type="checkbox" class="is_proficient" name="intimidation" id="intimidation_proficiency"
+                    <input type="checkbox" class="is_proficient" name="intimidation" id="Intimidation"
                       data-stat="cha">
                     <label>Intimidation</label> <br>
                     <input type="number" class="skill_bonus mod" name="persuasion" id="persuasion_bonus"
                       data-stat="cha">
-                    <input type="checkbox" class="is_proficient" name="persuasion" id="persuasion_proficiency"
+                    <input type="checkbox" class="is_proficient" name="persuasion" id="Persuasion"
                       data-stat="cha">
                     <label>Persuasion</label> <br>
                   </th>

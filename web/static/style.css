@@ -5,6 +5,11 @@ p, label, input[type="text"], input[type="number"], option, #alignment, #injurie
 
 .fill {
   font-size:small;
+  font-family: Bahnschrift;
+}
+
+label {
+  font-size:small;
 }
 
 .header {
@@ -62,17 +67,30 @@ p, label, input[type="text"], input[type="number"], option, #alignment, #injurie
   padding-top:2ch;
 }
 .info {
-  display:table;
   width:100%;
   height:auto;
 
 }
 
-.info div {
-  display:inline;
-}
 .hp_wrapper {
   height:60%;
+}
+
+.info_item {
+  display:inline-block;
+  margin-right:10px;
+}
+
+.info_item .fill {
+  border-bottom:1px solid #000;
+}
+
+.info_item .select {
+  border-bottom: 1px solid #000;
+  font-size:small;
+}
+.info_item div {
+  display:inline-block;
 }
 
 .ability_score_wrapper{

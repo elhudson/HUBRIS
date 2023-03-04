@@ -9,6 +9,7 @@ class Character:
     def __init__(self,player,con):
         sql=f'SELECT * FROM characters WHERE player="{player}"'
         df=pd.read_sql(sql,con)
+
         self.name=df["name"][0]
         self.str=df["str"][0]
         self.dex=df["dex"][0]
@@ -26,13 +27,40 @@ class Character:
         self.ranges=[]
         self.skills=[]
         self.tag_features=[]
-        self.class_features=[]      
-    
+        self.class_features=[]
+
+        self.define_abilities(con)
+        self.bin_abilities()
+        self.set_tier()
+        self.set_hp_max()
+        self.skills_str()
+
+          
     def define_abilities(self,con):
         ids_list=self.ability_ids.split(",")
         abs=generate_abilities(ids_list,con)
         self.abilities=abs
+        
+    def skills_str(self):
+        self.skill_names=""
+        for skill in self.skills:
+            self.skill_names+=skill.name+","
 
+    def set_tier(self):
+        spent=self.xp_spent
+        self.tier=None
+        if 0<spent<=25:
+            self.tier=1
+        elif 25<spent<=75:
+            self.tier=2
+        elif 75<spent<=135:
+            self.tier=3
+        elif 135<spent:
+            self.tier=4
+        
+    def set_hp_max(self):
+        self.hp_max=(3*(self.tier))+self.con
+        
     def bin_abilities(self):
         for ability in self.abilities:
             if type(ability)==background:
@@ -45,7 +73,7 @@ class Character:
                 self.ranges.append(ability)
             if type(ability)==duration:
                 self.durations.append(ability)
-            if type(ability)==proficiency:
+            if type(ability)==skill_proficiency:
                 self.skills.append(ability)
             if type(ability)==tag_feature:
                 self.tag_features.append(ability)
@@ -53,7 +81,11 @@ class Character:
                 self.class_features.append(ability)
             if type(ability)==pcclass:
                 self.char_class=ability
-    
+                ability.define_hd()
+                self.hit_die=ability.hit_die   
+            
+
+
 def is_relational(function_name):
     l=function_name.split()
     if len(l)==1:
@@ -133,6 +165,9 @@ def generate_abilities(ability_ids, con):
         if src=="classes":
             a=pcclass(id,con)
             abilities.append(a)
+        if src=="skills":
+            a=skill_proficiency(id,con)
+            abilities.append(a)
     return abilities
 
 class ability:
@@ -141,18 +176,30 @@ class ability:
         self.name=self.rec["title"][0]
         ## self.tier=self.rec["tier"][0]
         self.id=id
-class proficiency(ability):
-    def __init__(self,id,con):
-        super().__init__(id,con)
 
 class pcclass(ability):
     def __init__(self,id,con):
         super().__init__(id,con)
+    def define_hd(self):
+        if self.name=="Barbarian":
+            self.hit_die="2d4"
+        if self.name in ["Sharpshooter","Knight","Fighter"]:
+            self.hit_die="d6"
+        if self.name in ["Rogue","Priest"]:
+            self.hit_die="d4"
+        if self.name in ["Elementalist","Beguiler"]:
+            self.hit_die="d3"
+        if self.name=="Wizard":
+            self.hit_die="d2"
     
 class feature(ability):
     def __init__(self,id,con):
         super().__init__(id,con)
-        
+
+class skill_proficiency(ability):
+    def __init__(self,id,con):
+        super().__init__(id,con)
+
 class power(ability):
     def __init__(self,id,con):
         super().__init__(id,con)
