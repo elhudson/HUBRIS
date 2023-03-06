@@ -10,5 +10,10 @@
     },
     "livePreview.serverRoot": "/backend/",
     "editor.scrollPredominantAxis": false,
-    "python.linting.enabled": false
+    "python.linting.enabled": false,
+    "python.linting.pylintEnabled": false,
+    "python.linting.pylamaEnabled": true,
+    "python.analysis.extraPaths": [
+        "./web/logic"
+    ]
 }
