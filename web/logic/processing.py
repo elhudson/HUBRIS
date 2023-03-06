@@ -8,22 +8,29 @@ def is_relational(function_name):
     else:
         return True
 
-def get_tables(con):
+def get_tables(con,table_type=None):
     s=f'SELECT * FROM sqlite_master WHERE type="table"'
-    tables=[]
+    relational_tables=[]
+    property_tables=[]
+    character_tables=[]
     cur=con.cursor()
     for row in cur.execute(s):
-        tables.append(row[1])
-    cur.close()
-    pivot_tables=[]
-    property_tables=[]
-    for table in tables:
-        if table!="characters":
-            if is_relational(table):
-                pivot_tables.append(f'[{table}]')
+        if is_relational(row[1]):
+            relational_tables.append(row[1])
+        else:
+            if row[1]=="characters":
+                character_tables.append(row[1])
             else:
-                property_tables.append(table)
-    return pivot_tables, property_tables
+                property_tables.append(row[1])
+    cur.close()
+    if table_type=="rel":
+        return relational_tables
+    elif table_type=="prop":
+        return property_tables
+    elif table_type=="char":
+        return character_tables
+    else:
+        return relational_tables, property_tables, character_tables
 
 
 def fetch_by_id(id, con, target=None, is_property=True,):
@@ -48,42 +55,42 @@ def fetch_by_id(id, con, target=None, is_property=True,):
     return rec
 
 def find_source(id,con):
-    properties=get_tables(con)[1]
-    for table in properties:
+    tables=get_tables(con,"prop")
+    for table in tables:
         sql=f'''SELECT * FROM {table} WHERE id="{id}"'''
-        ret=pd.read_sql_query(sql,con)
+        ret=pd.read_sql(sql,con)
         if ret.empty==False:
             return table
+    return "id not found in database"
        
-def generate_abilities(ability_ids, con):
+def generate_abilities(ability_ids, con, source=None):
     abilities=[]
     for id in ability_ids:
-        src=find_source(id,con)
-        if src=="effects":
-            a=effect(id,con)
-            abilities.append(a)
-        if src=="durations":
-            a=duration(id,con)
-            abilities.append(a)
-        if src=="ranges":
-            a=rng(id,con)
-            abilities.append(a)
-        if src=="class_features":
-            a=class_feature(id,con)
-            abilities.append(a)
-        if src=="tag_features":
-            a=tag_feature(id,con)
-            abilities.append(a)
-        if src=="backgrounds":
-            a=background(id,con)
-            abilities.append(a)
-        if src=="classes":
-            a=pcclass(id,con)
-            abilities.append(a)
-        if src=="skills":
-            a=skill_proficiency(id,con)
-            abilities.append(a)
+        if source==None:
+            src=find_source(id,con)
+        else:
+            source=src
+
+        
     return abilities
+
+def gen_by_src(id,con,src):
+    if src=="effects":
+        a=effect(id,con)
+    if src=="durations":
+        a=duration(id,con)
+    if src=="ranges":
+        a=rng(id,con)
+    if src=="class_features":
+        a=class_feature(id,con)
+    if src=="tag_features":
+        a=tag_feature(id,con)
+    if src=="backgrounds":
+        a=background(id,con)
+    if src=="classes":
+        a=pcclass(id,con)
+    if src=="skills":
+        a=skill_proficiency(id,con)
 
 class ability:
     def __init__(self,id,con):
